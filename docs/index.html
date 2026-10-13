@@ -19,7 +19,7 @@
   <meta name="twitter:description" content="Coupling collective dynamics and individual states for long-horizon social simulation.">
   <meta name="twitter:image" content="https://ai4ss.github.io/M2Sim/assets/overview.png">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="assets/site.css?v=20261013-editorial">
+  <link rel="stylesheet" href="assets/site.css?v=20261013-method-results">
   <script src="assets/site.js" defer></script>
 </head>
 <body>
@@ -31,6 +31,7 @@
       <a href="#abstract">Abstract</a>
       <a href="#highlights">Highlights</a>
       <a href="#method">Method</a>
+      <a href="#results">Results</a>
       <a href="#usage">Usage</a>
       <a href="#citation">Citation</a>
       </div>
@@ -120,60 +121,272 @@
 
       <section class="text-section method-section" id="method" aria-labelledby="method-heading">
         <div class="section-heading">
-        <p class="section-kicker">03 / Inside the framework</p>
-        <h2 id="method-heading">Method</h2>
+          <p class="section-kicker">03 / Inside the framework</p>
+          <h2 id="method-heading">Method</h2>
         </div>
-        <p class="section-intro">M<sup>2</sup>Sim closes the loop between a two-channel macro mean field and state-conditioned micro agents. Multi-step rollouts train this loop to preserve long-term dynamics and respond to opinion-changing evidence.</p>
-        <div class="method-flow" aria-label="Macro to micro feedback loop">
-          <div><span>01 / Macro</span><strong>Mean-field context</strong></div>
-          <span class="flow-arrow" aria-hidden="true">→</span>
-          <div><span>02 / Micro</span><strong>State-conditioned actions</strong></div>
-          <span class="flow-arrow" aria-hidden="true">→</span>
-          <div><span>03 / Feedback</span><strong>Updated mean field</strong></div>
+        <p class="section-intro">Two synchronized mean-field channels connect collective dynamics with individual actions. A separate training loop learns their longer-term consequences.</p>
+        <figure class="method-diagram">
+          <div class="method-diagram-scroll" tabindex="0" role="region" aria-label="M²Sim workflow diagram; scroll horizontally on small screens">
+            <img src="assets/method-flow.svg" width="1360" height="878" alt="Two-lane M²Sim workflow: simulation updates participant states and both mean-field channels through agent actions; training uses predicted K-step rollouts and observed targets for consistency and action reselection.">
+          </div>
+          <figcaption class="method-diagram-guide">On small screens, scroll to explore the diagram. <a href="assets/method-flow.svg">Open full-size SVG ↗</a></figcaption>
+        </figure>
+        <dl class="method-caption-list">
+          <div><dt>Dual channels</dt><dd>The text synopsis <i>r</i><sub>t</sub> summarizes interactions and signals; the distribution <i>m</i><sub>t</sub> tracks opinion-state proportions. Both condition micro agents alongside their states, personalities, and current signals.</dd></div>
+          <div><dt>Recursive feedback</dt><dd>The Event Transformer updates participant states and the distribution. Realized actions update the text synopsis through the summarizer; the resulting pair becomes the next step’s macro context.</dd></div>
+          <div><dt>Training-only rollout</dt><dd>Self-conditioned predictions support transition consistency and candidate-policy scoring. Discounted KL costs guide soft weighting and action reselection, with auxiliary text supervision. Observed future distributions supervise training; agents never receive the real future during simulation.</dd></div>
+        </dl>
+      </section>
+
+      <section class="text-section results-section" id="results" aria-labelledby="results-heading">
+        <div class="section-heading">
+          <p class="section-kicker">04 / Experimental evidence</p>
+          <h2 id="results-heading">Results</h2>
         </div>
-        <ol class="method-modules">
-          <li class="macro-module">
-            <p class="module-label">Representation / Macro level</p>
-            <h3>A two-channel macro mean field</h3>
-            <div class="mean-field-channels" aria-label="The two mean-field channels">
-              <div class="text-channel"><span>Textual channel</span><strong>r<sub>t</sub></strong></div>
-              <div class="state-channel"><span>Distributional channel</span><strong>m<sub>t</sub></strong></div>
-            </div>
-            <p>The macro context combines a <strong>textual synopsis <i>r</i><sub>t</sub></strong> of recent interactions and exogenous signals with a <strong>distributional synopsis <i>m</i><sub>t</sub></strong> that tracks the proportions of opinion states. The text channel preserves what happened; the distributional channel retains accumulated opinion-state information. Together, they represent both the semantic context and the evolving public mood.</p>
-          </li>
-          <li class="micro-module">
-            <p class="module-label">Coupling / Micro level</p>
-            <h3>From macro context to micro agents</h3>
-            <p>A temporal Event Transformer uses the previous mean field, the current participants’ personalities, and the exogenous signal <i>c</i><sub>t</sub> to generate participants’ opinion states and update the macro distribution. Each micro agent then generates an action conditioned on its opinion state <i>s</i><sub>i,t</sub>, personality <i>p</i><sub>i,t</sub>, both mean-field channels, and the current signal.</p>
-            <div class="method-equation" role="math" aria-label="Agent policy conditioned on individual state, personality, textual mean field, distributional mean field, and exogenous signal">π<sub>φ</sub>(a<sub>i,t</sub> | s<sub>i,t</sub>, p<sub>i,t</sub>, r<sub>t−1</sub>, m<sub>t</sub>, c<sub>t</sub>)</div>
-            <p>After the agents act, the summarizer incorporates their realized actions into <i>r</i><sub>t</sub>. This updated text and the state distribution become the next step’s macro context. Historical information is carried through this recursive mean field, rather than through a separate persistent transition model for each identity.</p>
-          </li>
-          <li class="rollout-module">
-            <p class="module-label">Transition training</p>
-            <h3>Look ahead with self-conditioned rollouts</h3>
-            <p>One-step accuracy alone does not ensure stable long simulations. During state-transition training, the model recursively feeds its predicted distribution back into the next step to produce a <i>K</i>-step forecast. A sequence-fitting loss matches observed trajectories, while a rollout-consistency loss penalizes discrepancies that emerge as predictions accumulate.</p>
-            <div class="method-equation" role="math" aria-label="Predicted distribution is recursively rolled forward over K steps">m̂<sub>t</sub> → m̂<sub>t+1</sub> → m̂<sub>t+2</sub> → … → m̂<sub>t+K</sub></div>
-            <p>This exposes the transition model to its own prediction errors during training, helping reduce long-horizon drift, variance damping, and majority lock-in.</p>
-          </li>
-          <li class="policy-module">
-            <p class="module-label">Policy optimization</p>
-            <h3>Optimize micro actions by their future macro impact</h3>
-            <p>During policy optimization, dropout samples create multiple candidate policy instances. Instead of generating a full future text conversation for every candidate, the state-transition model supplies a multi-step mean-field surrogate. Each candidate is scored by the discounted KL discrepancy between its predicted future distributions and the observed training trajectory; lower-cost candidates receive greater soft weights for action reselection.</p>
-            <div class="method-equation" role="math" aria-label="Candidate cost is discounted KL divergence summed over K future steps">V(λ) = ∑<sub>k=1…K</sub> γ<sup>k−1</sup> KL(m*<sub>t+k</sub> ∥ m̂<sub>t+k</sub>(λ))</div>
-            <p>The policy objective combines this trajectory-based prediction loss with auxiliary text supervision, linking plausible individual actions to their longer-term collective consequences.</p>
-            <p class="method-note"><strong>Training and simulation.</strong> Observed future distributions in this objective are supervision for training. Looking ahead means rolling out model predictions; it does not mean giving agents access to the real future during simulation.</p>
-          </li>
-          <li class="reversal-module">
-            <p class="module-label">Mechanism / Opinion reversal</p>
-            <h3>Why the coupling helps capture reversals</h3>
-            <p>New exogenous information first changes the state-transition context and the distribution of participants’ opinions. Their state-conditioned actions then update the textual mean field, feeding the change back into subsequent steps. Temporal attention captures delayed evidence accumulation, while rollout-based policy training evaluates consequences beyond an immediate response. Together, these mechanisms support gradual shifts and the timing and magnitude of a collective opinion reversal.</p>
-          </li>
-        </ol>
+        <p class="section-intro">Trajectory alignment, main comparisons, and component ablations across short-horizon, long-horizon, and reversal simulations.</p>
+        <figure class="paper-figure">
+          <a class="figure-link" href="assets/results.pdf" aria-label="Open the experimental trajectory figure as a full-resolution PDF"><img src="assets/results.png" width="2400" height="1379" loading="lazy" alt="Long-horizon action and opinion-state trajectories, and an opinion reversal event, comparing real data with M²Sim, MF-LLM, Social Retrieval, and Direct LLM."></a>
+          <figcaption><strong>Trajectory alignment of collective actions and state distributions.</strong> Long-horizon and reversal trajectories compare M²Sim with real data and three baselines. <a href="assets/results.pdf">View full-resolution figure ↗</a></figcaption>
+        </figure>
+        <div class="results-block" id="main-results">
+          <h3>Main experiments</h3>
+          <p class="results-description">Comparison across the three simulation settings reported in the paper.</p>
+          <div class="results-table-wrap" tabindex="0" role="region" aria-label="Main experiment results; scroll horizontally on small screens"><table class="results-table"><caption class="sr-only">Main experiment results</caption><thead><tr>
+<th scope="col">Method</th>
+<th scope="col">KL Div. ↓</th>
+<th scope="col">Wass. Dist. ↓</th>
+<th scope="col">DTW ↓</th>
+<th scope="col">Macro F1 ↑</th>
+<th scope="col">Micro F1 ↑</th>
+<th scope="col">NLL Loss ↓</th>
+</tr></thead>
+<tbody><tr class="setting-row"><th colspan="7" scope="colgroup">Short-Horizon · Default Steps</th></tr>
+<tr><th scope="row">Direct LLM</th>
+<td>0.1101</td>
+<td>0.1661</td>
+<td>0.1578</td>
+<td>0.5805</td>
+<td>0.6953</td>
+<td>4.0674</td>
+</tr>
+<tr><th scope="row">Social Retrieval</th>
+<td>0.1051</td>
+<td>0.1578</td>
+<td>0.1500</td>
+<td>0.5829</td>
+<td>0.6905</td>
+<td>3.9532</td>
+</tr>
+<tr><th scope="row">MF-LLM</th>
+<td>0.0492</td>
+<td>0.1062</td>
+<td><strong>0.0944</strong></td>
+<td>0.5861</td>
+<td>0.6975</td>
+<td>3.9336</td>
+</tr>
+<tr class="ours"><th scope="row">M²Sim (Ours)</th>
+<td><strong>0.0453</strong></td>
+<td><strong>0.1006</strong></td>
+<td>0.0995</td>
+<td><strong>0.5897</strong></td>
+<td><strong>0.7082</strong></td>
+<td><strong>3.9156</strong></td>
+</tr>
+</tbody>
+<tbody><tr class="setting-row"><th colspan="7" scope="colgroup">Long-Horizon · Full Steps</th></tr>
+<tr><th scope="row">Direct LLM</th>
+<td>1.8300</td>
+<td>0.3746</td>
+<td>0.4003</td>
+<td>0.3922</td>
+<td>0.5621</td>
+<td>4.6141</td>
+</tr>
+<tr><th scope="row">Social Retrieval</th>
+<td>1.6554</td>
+<td>0.3515</td>
+<td>0.3816</td>
+<td>0.4014</td>
+<td>0.5962</td>
+<td>4.5294</td>
+</tr>
+<tr><th scope="row">MF-LLM</th>
+<td>1.2490</td>
+<td>0.3251</td>
+<td>0.2886</td>
+<td>0.4643</td>
+<td>0.6153</td>
+<td>3.9198</td>
+</tr>
+<tr class="ours"><th scope="row">M²Sim (Ours)</th>
+<td><strong>0.3089</strong></td>
+<td><strong>0.1773</strong></td>
+<td><strong>0.1666</strong></td>
+<td><strong>0.4805</strong></td>
+<td><strong>0.6393</strong></td>
+<td><strong>3.7655</strong></td>
+</tr>
+</tbody>
+<tbody><tr class="setting-row"><th colspan="7" scope="colgroup">Reversal · Full Steps</th></tr>
+<tr><th scope="row">Direct LLM</th>
+<td>5.4883</td>
+<td>0.4535</td>
+<td>0.4377</td>
+<td>0.3531</td>
+<td>0.4837</td>
+<td>4.6469</td>
+</tr>
+<tr><th scope="row">Social Retrieval</th>
+<td>3.5539</td>
+<td>0.4432</td>
+<td>0.3978</td>
+<td>0.3690</td>
+<td>0.5017</td>
+<td>4.2002</td>
+</tr>
+<tr><th scope="row">MF-LLM</th>
+<td>1.6425</td>
+<td>0.2763</td>
+<td>0.2425</td>
+<td>0.4158</td>
+<td>0.5721</td>
+<td>3.8841</td>
+</tr>
+<tr class="ours"><th scope="row">M²Sim (Ours)</th>
+<td><strong>0.5434</strong></td>
+<td><strong>0.2127</strong></td>
+<td><strong>0.1986</strong></td>
+<td><strong>0.4533</strong></td>
+<td><strong>0.6065</strong></td>
+<td><strong>3.8384</strong></td>
+</tr>
+</tbody>
+</table></div>
+          <p class="table-note">Mean values from Table 1. ↓ Lower is better; ↑ higher is better. Bold marks the best value within each setting. Relative improvement percentages are omitted for readability.</p>
+        </div>
+        <div class="results-block" id="ablation-results">
+          <h3>Ablation study</h3>
+          <p class="results-description">Removing LCT-State, LCT-Policy, or Sampling from the full framework.</p>
+          <div class="results-table-wrap" tabindex="0" role="region" aria-label="Component ablation results; scroll horizontally on small screens"><table class="results-table"><caption class="sr-only">Component ablation results</caption><thead><tr>
+<th scope="col">Method</th>
+<th scope="col">KL Div. ↓</th>
+<th scope="col">Wass. Dist. ↓</th>
+<th scope="col">DTW ↓</th>
+<th scope="col">Macro F1 ↑</th>
+<th scope="col">Micro F1 ↑</th>
+<th scope="col">NLL Loss ↓</th>
+</tr></thead>
+<tbody><tr class="setting-row"><th colspan="7" scope="colgroup">Short-Horizon · Default Steps</th></tr>
+<tr class="ours"><th scope="row">M²Sim (Ours)</th>
+<td>0.0453</td>
+<td><strong>0.1006</strong></td>
+<td>0.0995</td>
+<td>0.5897</td>
+<td><strong>0.7082</strong></td>
+<td><strong>3.9156</strong></td>
+</tr>
+<tr><th scope="row">w/o LCT-State</th>
+<td><strong>0.0449</strong></td>
+<td>0.1120</td>
+<td><strong>0.0802</strong></td>
+<td>0.5825</td>
+<td>0.6828</td>
+<td>4.0064</td>
+</tr>
+<tr><th scope="row">w/o LCT-Policy</th>
+<td>0.0491</td>
+<td>0.1051</td>
+<td>0.0856</td>
+<td>0.5809</td>
+<td>0.6962</td>
+<td>3.9403</td>
+</tr>
+<tr><th scope="row">w/o Sampling</th>
+<td>0.0649</td>
+<td>0.1115</td>
+<td>0.1081</td>
+<td><strong>0.5925</strong></td>
+<td>0.7014</td>
+<td>3.9206</td>
+</tr>
+</tbody>
+<tbody><tr class="setting-row"><th colspan="7" scope="colgroup">Long-Horizon · Full Steps</th></tr>
+<tr class="ours"><th scope="row">M²Sim (Ours)</th>
+<td><strong>0.3089</strong></td>
+<td><strong>0.1773</strong></td>
+<td><strong>0.1666</strong></td>
+<td><strong>0.4805</strong></td>
+<td><strong>0.6393</strong></td>
+<td><strong>3.7655</strong></td>
+</tr>
+<tr><th scope="row">w/o LCT-State</th>
+<td>0.8770</td>
+<td>0.2123</td>
+<td>0.2104</td>
+<td>0.4725</td>
+<td>0.6187</td>
+<td>3.9414</td>
+</tr>
+<tr><th scope="row">w/o LCT-Policy</th>
+<td>0.5872</td>
+<td>0.2028</td>
+<td>0.1730</td>
+<td>0.4314</td>
+<td>0.5765</td>
+<td>3.9738</td>
+</tr>
+<tr><th scope="row">w/o Sampling</th>
+<td>0.3536</td>
+<td>0.1885</td>
+<td>0.1710</td>
+<td>0.4482</td>
+<td>0.5774</td>
+<td>3.7782</td>
+</tr>
+</tbody>
+<tbody><tr class="setting-row"><th colspan="7" scope="colgroup">Reversal · Full Steps</th></tr>
+<tr class="ours"><th scope="row">M²Sim (Ours)</th>
+<td><strong>0.5434</strong></td>
+<td><strong>0.2127</strong></td>
+<td>0.1986</td>
+<td>0.4533</td>
+<td>0.6065</td>
+<td><strong>3.8384</strong></td>
+</tr>
+<tr><th scope="row">w/o LCT-State</th>
+<td>1.1748</td>
+<td>0.2536</td>
+<td>0.2319</td>
+<td><strong>0.4649</strong></td>
+<td><strong>0.6232</strong></td>
+<td>4.0610</td>
+</tr>
+<tr><th scope="row">w/o LCT-Policy</th>
+<td>0.9359</td>
+<td>0.2396</td>
+<td><strong>0.1808</strong></td>
+<td>0.4309</td>
+<td>0.5592</td>
+<td>4.2301</td>
+</tr>
+<tr><th scope="row">w/o Sampling</th>
+<td>0.7634</td>
+<td>0.2281</td>
+<td>0.1897</td>
+<td>0.4214</td>
+<td>0.5721</td>
+<td>4.0404</td>
+</tr>
+</tbody>
+</table></div>
+          <p class="table-note">Mean values from Table 2. ↓ Lower is better; ↑ higher is better. Bold marks the best value within each setting. Relative change percentages are omitted; metric values retain the paper’s precision.</p>
+        </div>
       </section>
 
       <section class="text-section usage-section" id="usage" aria-labelledby="usage-heading">
         <div class="section-heading">
-        <p class="section-kicker">04 / Work with M<sup>2</sup>Sim</p>
+        <p class="section-kicker">05 / Work with M<sup>2</sup>Sim</p>
         <h2 id="usage-heading">Usage</h2>
         </div>
         <p>Clone the repository, install its dependencies with Poetry, and create a local environment configuration.</p>

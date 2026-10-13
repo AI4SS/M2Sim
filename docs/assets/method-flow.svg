@@ -1,0 +1,150 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1360" height="878" viewBox="0 0 1360 878" role="img" aria-labelledby="method-title method-desc">
+  <title id="method-title">M²Sim: dual-channel simulation feedback and training-only future rollouts</title>
+  <desc id="method-desc">In the simulation lane, the previous textual and distributional mean fields, the current exogenous signal, and participant personalities feed an Event Transformer. It generates participant opinion states and the current state distribution. State-conditioned micro agents produce actions; a summarizer updates the textual synopsis. The updated text and distribution feed back at the next time step. The separate training lane uses self-conditioned K-step predictions for transition rollout consistency. Dropout-induced policy instances are evaluated through a multi-step mean-field surrogate; discounted KL costs against observed training targets give soft weights for action reselection. Observed future distributions are training supervision, never simulation inputs.</desc>
+  <defs>
+    <marker id="data-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1L7 4L1 7" fill="none" stroke="#286b63" stroke-width="1.3"/></marker>
+    <marker id="supervision-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1L7 4L1 7" fill="none" stroke="#918363" stroke-width="1.3"/></marker>
+    <style>
+      text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif; fill: #20302e; }
+      .kicker { font-size: 13px; font-weight: 600; letter-spacing: 1.4px; fill: #286b63; }
+      .heading { font-family: Georgia, "Times New Roman", serif; font-size: 27px; }
+      .label { font-size: 17px; }
+      .small { font-size: 15px; fill: #64706b; }
+      .node-title { font-family: Georgia, "Times New Roman", serif; font-size: 22px; }
+      .math { font-family: Georgia, "Times New Roman", serif; font-size: 22px; }
+      .math-small { font-family: Georgia, "Times New Roman", serif; font-size: 19px; }
+      .module { fill: #fff; stroke: #cbd5cc; stroke-width: 1.2; }
+      .line { fill: none; stroke: #286b63; stroke-width: 1.6; stroke-linejoin: round; marker-end: url(#data-arrow); }
+      .condition { fill: none; stroke: #6e9381; stroke-width: 1.3; stroke-dasharray: 4 4; marker-end: url(#data-arrow); }
+      .supervision { fill: none; stroke: #918363; stroke-width: 1.4; stroke-dasharray: 5 4; stroke-linejoin: round; marker-end: url(#supervision-arrow); }
+    </style>
+  </defs>
+
+  <rect width="1360" height="878" fill="#fff"/>
+  <g id="simulation-lane">
+    <text x="36" y="39" class="kicker">SIMULATION / STEP t</text>
+    <text x="36" y="77" class="heading">Macro context shapes micro actions; actions update the macro mean field.</text>
+    <text x="36" y="107" class="small">Solid arrows: realized data flow and next-step feedback. Dashed arrows above: current conditions.</text>
+
+    <rect x="280" y="139" width="638" height="36" rx="3" fill="#f5f6f1"/>
+    <text x="300" y="162" class="label">Current signal c<tspan baseline-shift="sub" font-size="12">t</tspan> + participant personalities p<tspan baseline-shift="sub" font-size="12">i,t</tspan></text>
+    <path class="condition" d="M375 175V194"/>
+    <path class="condition" d="M818 175V194"/>
+
+    <g id="previous-mean-field">
+      <rect class="module" x="36" y="194" width="205" height="156" rx="4"/>
+      <text x="52" y="224" class="node-title" style="font-size:20px">Previous mean field</text>
+      <rect x="48" y="243" width="181" height="39" fill="#f3efe4"/>
+      <text x="59" y="267" class="label">Text synopsis r<tspan baseline-shift="sub" font-size="12">t−1</tspan></text>
+      <rect x="48" y="291" width="181" height="39" fill="#eaf1e9"/>
+      <text x="59" y="315" class="label">Distribution m<tspan baseline-shift="sub" font-size="12">t−1</tspan></text>
+    </g>
+    <path class="line" d="M241 270H280"/>
+
+    <g id="event-transformer">
+      <rect class="module" x="280" y="194" width="190" height="156" rx="4"/>
+      <text x="298" y="231" class="node-title">Event</text>
+      <text x="298" y="257" class="node-title">Transformer</text>
+      <text x="298" y="294" class="math">f<tspan baseline-shift="sub" font-size="15">ψ</tspan></text>
+      <text x="298" y="326" class="small">State transition</text>
+    </g>
+    <path class="line" d="M470 270H510"/>
+
+    <g id="state-update">
+      <rect class="module" x="510" y="194" width="168" height="156" rx="4"/>
+      <text x="526" y="224" class="node-title" style="font-size:20px">State update</text>
+      <text x="526" y="253" class="small">Participant states</text>
+      <text x="526" y="279" class="math">s<tspan baseline-shift="sub" font-size="15">i,t</tspan></text>
+      <text x="526" y="308" class="small">Current distribution</text>
+      <text x="526" y="333" class="math">m<tspan baseline-shift="sub" font-size="15">t</tspan></text>
+    </g>
+    <path class="line" d="M678 270H718"/>
+
+    <g id="micro-agent">
+      <rect x="718" y="194" width="200" height="156" rx="4" fill="#edf3ed" stroke="#a9c0ae" stroke-width="1.2"/>
+      <text x="736" y="230" class="node-title">Micro agent</text>
+      <text x="736" y="265" class="math">π<tspan baseline-shift="sub" font-size="15">φ</tspan></text>
+      <text x="736" y="293" class="small">Conditioned on</text>
+      <text x="736" y="317" class="math-small">s<tspan baseline-shift="sub" font-size="12">i,t</tspan>, p<tspan baseline-shift="sub" font-size="12">i,t</tspan>, r<tspan baseline-shift="sub" font-size="12">t−1</tspan>, m<tspan baseline-shift="sub" font-size="12">t</tspan>, c<tspan baseline-shift="sub" font-size="12">t</tspan></text>
+    </g>
+    <path class="line" d="M918 270H958"/>
+
+    <g id="realized-actions">
+      <rect class="module" x="958" y="194" width="100" height="156" rx="4"/>
+      <text x="972" y="240" class="node-title" style="font-size:20px">Actions</text>
+      <text x="972" y="286" class="math">a<tspan baseline-shift="sub" font-size="15">i,t</tspan></text>
+    </g>
+    <path class="line" d="M1058 270H1098"/>
+
+    <g id="text-summarizer">
+      <rect class="module" x="1098" y="194" width="226" height="156" rx="4"/>
+      <text x="1116" y="230" class="node-title">Summarizer μ<tspan baseline-shift="sub" font-size="15">θ</tspan></text>
+      <text x="1116" y="262" class="math-small">r<tspan baseline-shift="sub" font-size="12">t−1</tspan>, m<tspan baseline-shift="sub" font-size="12">t</tspan>, a<tspan baseline-shift="sub" font-size="12">t</tspan>, c<tspan baseline-shift="sub" font-size="12">t</tspan></text>
+      <text x="1116" y="309" class="label">Text synopsis r<tspan baseline-shift="sub" font-size="12">t</tspan></text>
+    </g>
+
+    <path class="line" d="M1211 350V369"/>
+    <path class="line" d="M594 350V389H1120"/>
+    <g id="updated-mean-field">
+      <rect x="1120" y="369" width="204" height="40" rx="3" fill="#eaf1e9" stroke="#b5c8b7" stroke-width="1.2"/>
+      <text x="1135" y="395" class="label">Updated pair (r<tspan baseline-shift="sub" font-size="12">t</tspan>, m<tspan baseline-shift="sub" font-size="12">t</tspan>)</text>
+    </g>
+    <path class="line" d="M1222 409V438H138V350"/>
+    <rect x="482" y="425" width="568" height="26" fill="#fff"/>
+    <text x="494" y="443" class="kicker" style="font-size:12px;letter-spacing:.7px">NEXT STEP / updated pair becomes the previous macro context</text>
+  </g>
+
+  <path d="M36 472H1324" stroke="#d9ded5" stroke-width="1.3"/>
+  <g id="training-lane">
+    <text x="36" y="507" class="kicker">TRAINING ONLY / K-STEP FUTURE ROLLOUT</text>
+    <text x="36" y="538" class="small">Observed future distributions supervise training losses. They are never provided as simulation inputs.</text>
+
+    <g id="transition-rollout">
+      <rect class="module" x="36" y="563" width="588" height="119" rx="4"/>
+      <text x="54" y="589" class="kicker" style="font-size:11px">TRANSITION TRAINING</text>
+      <text x="54" y="625" class="math">m̂<tspan baseline-shift="sub" font-size="16">t</tspan><tspan baseline-shift="baseline"> → m̂</tspan><tspan baseline-shift="sub" font-size="16">t+1</tspan><tspan baseline-shift="baseline"> → … → m̂</tspan><tspan baseline-shift="sub" font-size="16">t+K</tspan></text>
+      <text x="54" y="658" class="label">Self-conditioned predictions → rollout consistency</text>
+    </g>
+
+    <g id="observed-training-targets">
+      <rect x="708" y="563" width="616" height="119" rx="4" fill="#f8f5ed" stroke="#c9bfa8" stroke-width="1.2" stroke-dasharray="5 4"/>
+      <text x="728" y="593" class="node-title">Observed training targets</text>
+      <text x="728" y="626" class="math">m*<tspan baseline-shift="sub" font-size="16">t+1</tspan><tspan baseline-shift="baseline">, …, m*</tspan><tspan baseline-shift="sub" font-size="16">t+K</tspan></text>
+      <text x="728" y="658" class="small">Supervision for consistency and candidate-policy costs</text>
+    </g>
+    <path class="supervision" d="M708 622H624"/>
+    <path class="supervision" d="M1016 682V711H778V736"/>
+    <text x="1050" y="706" class="small" style="font-size:13px;fill:#918363">Training supervision</text>
+
+    <g id="candidate-policy-instances">
+      <rect class="module" x="36" y="736" width="232" height="113" rx="4"/>
+      <text x="54" y="766" class="node-title">Policy candidates</text>
+      <text x="54" y="796" class="label">Dropout instances λ</text>
+      <text x="54" y="824" class="small">Sample candidate actions</text>
+    </g>
+    <path class="line" d="M268 792H310"/>
+
+    <g id="mean-field-surrogate">
+      <rect class="module" x="310" y="736" width="269" height="113" rx="4"/>
+      <text x="328" y="766" class="node-title">Mean-field surrogate</text>
+      <text x="328" y="796" class="label">Transition-model predictions</text>
+      <text x="328" y="824" class="small">K-step future distributions</text>
+    </g>
+    <path class="line" d="M579 792H622"/>
+
+    <g id="discounted-trajectory-cost">
+      <rect class="module" x="622" y="736" width="311" height="113" rx="4"/>
+      <text x="640" y="766" class="node-title">Discounted KL cost</text>
+      <text x="640" y="799" class="math-small">∑ γ<tspan baseline-shift="super" font-size="12">k−1</tspan><tspan baseline-shift="baseline"> KL(m*</tspan><tspan baseline-shift="sub" font-size="12">t+k</tspan><tspan baseline-shift="baseline"> ∥ m̂</tspan><tspan baseline-shift="sub" font-size="12">t+k</tspan><tspan baseline-shift="baseline">)</tspan></text>
+      <text x="640" y="826" class="small">Sum over k = 1, …, K</text>
+    </g>
+    <path class="line" d="M933 792H975"/>
+
+    <g id="action-reselection">
+      <rect x="975" y="736" width="349" height="113" rx="4" fill="#edf3ed" stroke="#a9c0ae" stroke-width="1.2"/>
+      <text x="993" y="766" class="node-title">Soft weighting → reselection</text>
+      <text x="993" y="796" class="label">Lower cost → greater candidate weight</text>
+      <text x="993" y="824" class="small">Trajectory loss + auxiliary text supervision</text>
+    </g>
+  </g>
+</svg>
