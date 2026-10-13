@@ -87,39 +87,23 @@
         </div>
       </section>
 
-      <section id="highlights" aria-labelledby="highlights-heading">
-        <div class="text-section">
+      <section class="text-section" id="highlights" aria-labelledby="highlights-heading">
         <h2 id="highlights-heading">Highlights</h2>
-        <p class="section-intro">M<sup>2</sup>Sim couples individual states with collective dynamics through three components.</p>
+        <p class="section-intro">M<sup>2</sup>Sim addresses three central challenges in social simulation: connecting individual and collective dynamics, sustaining long-horizon evolution, and capturing opinion reversals.</p>
         <ol class="contribution-list">
           <li>
-            <h3>Model the evolving mean field</h3>
-            <p>An event-level state transition model, the Event Transformer, predicts the macro state distribution. A <i>K</i>-step rollout consistency objective trains it to track collective trajectories over multiple steps.</p>
+            <h3>Micro–Macro Coupling</h3>
+            <p>M<sup>2</sup>Sim couples macro-level collective dynamics with micro-level opinion states through an explicit state-transition mechanism. Agents act on both their individual states and the evolving mean field, connecting individual behavior with collective opinion evolution.</p>
           </li>
           <li>
-            <h3>Condition actions on individual states</h3>
-            <p>A LoRA-tuned policy LLM generates actions using micro-level opinion states and the evolving mean-field signals, allowing individual state changes to shape collective dynamics.</p>
+            <h3>Long-Horizon Dynamics</h3>
+            <p>Gradual changes in opinion require modeling beyond instantaneous reactions. A learned state-transition model and multi-step rollout consistency help preserve collective trajectories over long horizons, addressing accumulated drift, variance damping, and majority lock-in.</p>
           </li>
           <li>
-            <h3>Reselect actions by future impact</h3>
-            <p>Dropout-induced policy instances produce candidate actions. The transition model scores their <i>K</i>-step mean-field trajectories, providing soft weights for action reselection.</p>
+            <h3>Opinion Reversals</h3>
+            <p>Capturing a reversal requires tracking when opinions change and how far they shift. By conditioning actions on evolving opinion states and evaluating their multi-step impacts, M<sup>2</sup>Sim supports action reselection in response to exogenous signals, addressing the inertia that can obscure turning points.</p>
           </li>
         </ol>
-        </div>
-        <dl class="result-highlights">
-          <div><dt>Long-horizon KL reduction vs. MF-LLM</dt><dd>75.3<span>%</span></dd><dd class="result-detail">MF-LLM 1.2490 → M<sup>2</sup>Sim 0.3089</dd></div>
-          <div><dt>Reversal KL reduction vs. MF-LLM</dt><dd>66.9<span>%</span></dd><dd class="result-detail">MF-LLM 1.6425 → M<sup>2</sup>Sim 0.5434</dd></div>
-          <div><dt>Reported maximum interactions</dt><dd>40,000</dd><dd class="result-detail">Up to 40,000 interactions per simulation</dd></div>
-        </dl>
-
-        <p class="evaluation-note">Reported timestep-averaged KL divergence against observed trajectories; lower is better. Long-horizon evaluation uses full WEIBO trajectories, and reversal evaluation uses full event trajectories. Relative reductions use MF-LLM as the denominator.</p>
-        <figure class="paper-figure">
-          <a class="figure-link" href="assets/results.pdf" aria-label="Open the results figure as a full-resolution PDF">
-            <img src="assets/results.png" width="2400" height="1379" alt="Long-horizon collective comment/share actions and positive, neutral, and negative opinion-state trajectories, alongside an opinion reversal example." loading="lazy" decoding="async">
-          </a>
-          <figcaption><strong>Collective actions and opinion-state trajectories.</strong> Long-horizon comment/share trajectories and positive, neutral, and negative state distributions, alongside an opinion reversal example reported in the paper. <a href="assets/results.pdf">View full-resolution figure ↗</a></figcaption>
-        </figure>
-
       </section>
 
       <section class="text-section usage-section" id="usage" aria-labelledby="usage-heading">
