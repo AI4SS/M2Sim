@@ -1,4 +1,4 @@
-# Coupling Macro Dynamics and Micro States for Long-Horizon Social Simulation
+# M2Sim: Coupling Macro Dynamics and Micro States for Long-Horizon Social Simulation
 
 <p align="center">
   <a href="https://arxiv.org/abs/2604.05516">
@@ -13,13 +13,13 @@
 
 This repository contains the official implementation for the paper **"Coupling Macro Dynamics and Micro States for Long-Horizon Social Simulation"**. 🧠
 
-> **Abstract**: Social network simulation aims to model collective opinion dynamics in large populations, but existing LLM-based simulators mainly focus on macro-level dynamics while overlooking evolving micro-level internal states. This limits their ability to capture delayed opinion shifts and realistic long-horizon reversals. To address this, we propose **MF-MDP**, a social simulation framework that tightly couples **macro-level collective dynamics** with **micro-level agent states**. MF-MDP explicitly models latent opinion states with a state transition mechanism and formulates the problem as a **Mean-Field Markov Decision Process**, allowing agents to gradually evolve rather than react instantaneously. This design enables more accurate long-horizon simulation, better reversal tracking, and more stable collective dynamics over extended interaction sequences.
+> **Abstract**: Social network simulation aims to model collective opinion dynamics in large populations, but existing LLM-based simulators mainly focus on macro-level dynamics while overlooking evolving micro-level internal states. This limits their ability to capture delayed opinion shifts and realistic long-horizon reversals. To address this, we propose **M2Sim**, a social simulation framework that tightly couples **macro-level collective dynamics** with **micro-level agent states**. M2Sim explicitly models latent opinion states with a state transition mechanism and formulates the problem as a **Mean-Field Markov Decision Process**, allowing agents to gradually evolve rather than react instantaneously. This design enables more accurate long-horizon simulation, better reversal tracking, and more stable collective dynamics over extended interaction sequences.
 
 ---
 
 ## ✨ Highlight
 
-Our approach consistently improves long-horizon social simulation and reversal modeling. Compared to prior mean-field simulators, **MF-MDP** achieves:
+Our approach consistently improves long-horizon social simulation and reversal modeling. Compared to prior mean-field simulators, **M2Sim** achieves:
 
 - 📈 **75.3%** reduction in **long-horizon KL divergence** (**1.2490 → 0.3089**).
 - 📈 **66.9%** reduction in **reversal KL divergence** (**1.6425 → 0.5434**).
@@ -104,7 +104,7 @@ Key configurations in `run_simulation.sh`:
 To simulate a single event file:
 
 ```bash
-python main/script/run_mf_mdp.py \
+python main/script/run_m2sim.py \
     --file_name /path/to/json/file \
     --simulation_start 50 \
     --model 1.5B \
@@ -125,7 +125,7 @@ The saved results include:
 - Mean-field summaries
 - Log probabilities
 
-MF-MDP supports both default-step simulation and long-horizon full-trajectory evaluation, making it suitable for studying long-range opinion evolution and reversal dynamics.
+M2Sim supports both default-step simulation and long-horizon full-trajectory evaluation, making it suitable for studying long-range opinion evolution and reversal dynamics.
 
 ---
 

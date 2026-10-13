@@ -846,7 +846,7 @@ def load_st_model(device, checkpoint_path=None):
     import importlib
 
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    project_root = os.path.dirname(os.path.dirname(script_dir))  # /root/MF-MDP
+    project_root = os.path.dirname(os.path.dirname(script_dir))  # /root/M2Sim
 
     print(f"🔍 [调试] load_st_model 路径信息:")
     print(f"   __file__: {__file__}")

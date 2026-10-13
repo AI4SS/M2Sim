@@ -6,7 +6,7 @@
 # 此脚本用于运行 mean field 仿真实验
 # 使用 ST-Net 模型实时预测状态分布
 #
-# 使用方法: cd /root/MF-MDP && bash main/script/run_simulation.sh
+# 使用方法: cd /root/M2Sim && bash main/script/run_simulation.sh
 # =============================================================================
 
 # -----------------------------------------------------------------------------
@@ -50,8 +50,8 @@ echo ""
 STATE_MODEL_CHECKPOINT=${STATE_MODEL_CHECKPOINT:-"./checkpoints/event_transformer/event_transformer_best.pt"}
 
 # 仿真配置
-# 默认使用 run_mf_mdp.py 脚本
-PYTHON_SCRIPT="main/script/run_mf_mdp.py"
+# 默认使用 run_m2sim.py 脚本
+PYTHON_SCRIPT="main/script/run_m2sim.py"
 
 # 模型路径配置
 POLICY_MODEL_PATH=${POLICY_MODEL_PATH:-"./models/qwen2-1.5B"}  # 策略模型路径
