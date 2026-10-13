@@ -124,13 +124,6 @@
           <p class="section-kicker">03 / Inside the framework</p>
           <h2 id="method-heading">Method</h2>
         </div>
-        <p class="section-intro">Two synchronized mean-field channels connect collective dynamics with individual actions. A separate training loop learns their longer-term consequences.</p>
-        <figure class="method-diagram">
-          <div class="method-diagram-scroll" tabindex="0" role="region" aria-label="M²Sim workflow diagram; scroll horizontally on small screens">
-            <img src="assets/method-flow.svg" width="1360" height="878" alt="Two-lane M²Sim workflow: simulation updates participant states and both mean-field channels through agent actions; training uses predicted K-step rollouts and observed targets for consistency and action reselection.">
-          </div>
-          <figcaption class="method-diagram-guide">On small screens, scroll to explore the diagram. <a href="assets/method-flow.svg">Open full-size SVG ↗</a></figcaption>
-        </figure>
         <dl class="method-caption-list">
           <div><dt>Dual channels</dt><dd>The text synopsis <i>r</i><sub>t</sub> summarizes interactions and signals; the distribution <i>m</i><sub>t</sub> tracks opinion-state proportions. Both condition micro agents alongside their states, personalities, and current signals.</dd></div>
           <div><dt>Recursive feedback</dt><dd>The Event Transformer updates participant states and the distribution. Realized actions update the text synopsis through the summarizer; the resulting pair becomes the next step’s macro context.</dd></div>
