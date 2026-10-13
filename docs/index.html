@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>M²Sim — Coupling Macro Dynamics and Micro States for Long-Horizon Social Simulation</title>
+  <meta name="description" content="M²Sim couples macro-level collective dynamics with micro-level individual states for long-horizon social simulation and opinion reversal modeling.">
+  <meta name="theme-color" content="#286b68">
+  <link rel="canonical" href="https://ai4ss.github.io/M2Sim/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="M²Sim">
+  <meta property="og:title" content="Coupling Macro Dynamics and Micro States for Long-Horizon Social Simulation">
+  <meta property="og:description" content="A macro–micro coupled framework for long-horizon social simulation.">
+  <meta property="og:url" content="https://ai4ss.github.io/M2Sim/">
+  <meta property="og:image" content="https://ai4ss.github.io/M2Sim/assets/overview.png">
+  <meta property="og:image:alt" content="Overview of the M²Sim macro–micro social simulation framework.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="M²Sim: Macro Dynamics and Micro States">
+  <meta name="twitter:description" content="Coupling collective dynamics and individual states for long-horizon social simulation.">
+  <meta name="twitter:image" content="https://ai4ss.github.io/M2Sim/assets/overview.png">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/site.css">
+  <script src="assets/site.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="page">
+    <nav class="section-nav" aria-label="Page sections">
+      <a href="#abstract">Abstract</a>
+      <a href="#method">Method</a>
+      <a href="#results">Results</a>
+      <a href="#citation">Citation</a>
+    </nav>
+
+    <main id="main">
+      <header class="hero">
+        <p class="brand" aria-label="M squared Sim">M<sup>2</sup>Sim</p>
+        <h1>Coupling Macro Dynamics and Micro States for Long-Horizon Social Simulation</h1>
+        <p class="subtitle">Macro–micro coupled social simulation with evolving individual states and collective dynamics.</p>
+
+        <ul class="authors" aria-label="Authors">
+          <li>Yunyao Zhang<sup>1</sup></li>
+          <li>Yihao Ai<sup>2</sup></li>
+          <li>Zuocheng Ying<sup>1</sup></li>
+          <li>Qirui Mi<sup>3</sup></li>
+          <li>Junqing Yu<sup>1</sup></li>
+          <li>Wei Yang<sup>1</sup></li>
+          <li><a href="mailto:skyesong@hust.edu.cn">Zikai Song<sup>1†</sup></a></li>
+        </ul>
+        <div class="affiliations">
+          <p><sup>1</sup> Huazhong University of Science and Technology, Wuhan, China</p>
+          <p><sup>2</sup> National University of Singapore, Singapore</p>
+          <p><sup>3</sup> Institute of Automation, Chinese Academy of Sciences, Beijing, China</p>
+        </div>
+        <p class="correspondence">† Corresponding author: <a href="mailto:skyesong@hust.edu.cn">skyesong@hust.edu.cn</a></p>
+        <p class="affiliation-note">Affiliations reflect the work reported here. Qirui Mi is now an Assistant Professor at Shanghai University of Finance and Economics.</p>
+
+        <div class="resource-links" aria-label="Project resources">
+          <a class="resource-link primary" href="assets/M2Sim.pdf">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h8l4 4v14H6zM14 3v5h4M9 12h6M9 16h6"/></svg>
+            Paper <span class="resource-detail">(PDF)</span>
+          </a>
+          <a class="resource-link" href="https://arxiv.org/abs/2604.05516">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h8l4 4v14H6zM14 3v5h4M9 12h6M9 16h6"/></svg>
+            arXiv
+          </a>
+          <a class="resource-link" href="https://github.com/AI4SS/M2Sim">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 7-5 5 5 5m8-10 5 5-5 5M14 4l-4 16"/></svg>
+            Code
+          </a>
+          <a class="resource-link" href="#citation">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5H6v14h3M15 5h3v14h-3M10 9h4M10 15h4"/></svg>
+            BibTeX
+          </a>
+        </div>
+        <p class="paper-version">PDF: updated manuscript · arXiv: earlier preprint.</p>
+      </header>
+
+      <figure class="paper-figure overview" id="overview">
+        <a class="figure-link" href="assets/overview.pdf" aria-label="Open the M²Sim overview figure as a full-resolution PDF">
+          <img src="assets/overview.png" width="2400" height="1122" width="2400" height="1122" alt="M²Sim couples a macro Event Transformer and its K-step rollout consistency objective with a micro state-conditioned policy LLM and rollout-based action reselection." fetchpriority="high">
+        </a>
+        <figcaption><strong>M<sup>2</sup>Sim overview.</strong> At the macro level, an Event Transformer updates the distributional mean field with <i>K</i>-step rollout consistency. At the micro level, a state-conditioned policy LLM generates candidate actions and uses their predicted future impact for action reselection. <a href="assets/overview.pdf">View full-resolution figure ↗</a></figcaption>
+      </figure>
+
+      <section class="text-section" id="abstract" aria-labelledby="abstract-heading">
+        <h2 id="abstract-heading">Abstract</h2>
+        <div class="abstract-copy">
+          <p>Social network simulation aims to model collective opinion dynamics in large populations, but existing LLM-based simulators primarily focus on aggregate dynamics and largely ignore individual internal states. This limits their ability to capture opinion reversals driven by gradual individual shifts and makes them unreliable over long-horizon simulations.</p>
+          <p>Unlike existing methods that collapse dynamics into macro-only updates, we propose a social simulation framework, <strong>M<sup>2</sup>Sim</strong>, which tightly couples macro-level collective dynamics with micro-level individual states.</p>
+          <p>We explicitly model micro-level opinion states with a state transition mechanism, coupling <strong>M</strong>acro-level collective dynamics with <strong>M</strong>icro-level states. This allows the opinion-state distribution to evolve gradually, rather than triggering instant reactions, enabling the simulator to distinguish states close to or far from switching, capture opinion reversals, and maintain accuracy over long-horizon simulations.</p>
+          <p>Across real-world events, our M<sup>2</sup>Sim supports stable simulation of long-horizon social events with up to <strong>40,000 interactions</strong>, while reducing long-horizon KL divergence by <strong>75.3%</strong> (1.2490 → 0.3089) and reversal KL by <strong>66.9%</strong> (1.6425 → 0.5434), significantly mitigating the drift observed in MF-LLM.</p>
+        </div>
+      </section>
+
+      <section class="text-section" id="method" aria-labelledby="method-heading">
+        <h2 id="method-heading">Coupling the macro and micro levels</h2>
+        <p class="section-intro">Collective opinion evolves through individual actions. M<sup>2</sup>Sim makes this feedback explicit through distributional states and a learned transition model.</p>
+        <ol class="method-list">
+          <li>
+            <h3>Model the evolving mean field</h3>
+            <p>An event-level state transition model, the Event Transformer, predicts the macro state distribution. A <i>K</i>-step rollout consistency objective trains it to track collective trajectories over multiple steps.</p>
+          </li>
+          <li>
+            <h3>Condition actions on individual states</h3>
+            <p>A LoRA-tuned policy LLM generates actions using micro-level opinion states and the evolving mean-field signals, allowing individual state changes to shape collective dynamics.</p>
+          </li>
+          <li>
+            <h3>Reselect actions by future impact</h3>
+            <p>Dropout-induced policy instances produce candidate actions. The transition model scores their <i>K</i>-step mean-field trajectories, providing soft weights for action reselection.</p>
+          </li>
+        </ol>
+      </section>
+
+      <section id="results" aria-labelledby="results-heading">
+        <div class="section-heading">
+          <h2 id="results-heading">Long-horizon simulation and opinion reversals</h2>
+          <p>Reported results across real-world social events, compared with MF-LLM.</p>
+        </div>
+        <dl class="result-highlights">
+          <div><dt>Long-horizon KL reduction</dt><dd>75.3<span>%</span></dd><dd class="result-detail">1.2490 → 0.3089</dd></div>
+          <div><dt>Reversal KL reduction</dt><dd>66.9<span>%</span></dd><dd class="result-detail">1.6425 → 0.5434</dd></div>
+          <div><dt>Reported maximum interactions</dt><dd>40,000</dd><dd class="result-detail">Up to 40,000 interactions per simulation</dd></div>
+        </dl>
+
+        <p class="table-caption" id="kl-caption">Timestep-averaged KL divergence against observed trajectories. Lower is better (↓).</p>
+        <div class="table-wrap" role="region" aria-label="KL divergence comparison" tabindex="0">
+          <table aria-label="KL divergence comparison" aria-describedby="kl-caption">
+            <thead><tr><th scope="col">Evaluation setting</th><th scope="col">MF-LLM ↓</th><th scope="col">M<sup>2</sup>Sim ↓</th><th scope="col">Relative reduction</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">Long-horizon</th><td>1.2490</td><td class="best">0.3089</td><td>75.3%</td></tr>
+              <tr><th scope="row">Opinion reversal</th><td>1.6425</td><td class="best">0.5434</td><td>66.9%</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="evaluation-note">Long-horizon evaluation uses full WEIBO trajectories; reversal evaluation uses full event trajectories. Relative reductions are calculated against MF-LLM.</p>
+        <figure class="paper-figure">
+          <a class="figure-link" href="assets/results.pdf" aria-label="Open the results figure as a full-resolution PDF">
+            <img src="assets/results.png" width="2400" height="1379" width="2400" height="1379" alt="Long-horizon collective comment/share actions and positive, neutral, and negative opinion-state trajectories, alongside an opinion reversal example." loading="lazy" decoding="async">
+          </a>
+          <figcaption><strong>Collective actions and opinion-state trajectories.</strong> Long-horizon comment/share trajectories and positive, neutral, and negative state distributions, alongside an opinion reversal example reported in the paper. <a href="assets/results.pdf">View full-resolution figure ↗</a></figcaption>
+        </figure>
+
+      </section>
+
+      <section class="citation-section" id="citation" aria-labelledby="citation-heading">
+        <div class="citation-heading">
+          <div><h2 id="citation-heading">Citation</h2><p>If this work is useful to your research, please cite the paper.</p></div>
+          <div class="citation-actions">
+            <a href="assets/M2Sim.bib" download>Download .bib</a>
+            <button class="copy-button" type="button" id="copy-citation" hidden>Copy BibTeX</button>
+          </div>
+        </div>
+        <pre class="citation-code"><code id="citation-code">@misc{zhang2026couplingmacrodynamicsmicro,
+  title={Coupling Macro Dynamics and Micro States for Long-Horizon Social Simulation},
+  author={Yunyao Zhang and Yihao Ai and Zuocheng Ying and Qirui Mi and Junqing Yu and Wei Yang and Zikai Song},
+  year={2026},
+  eprint={2604.05516},
+  archivePrefix={arXiv},
+  primaryClass={cs.SI},
+  url={https://arxiv.org/abs/2604.05516},
+}</code></pre>
+        <p class="copy-status" id="copy-status" role="status" aria-live="polite"></p>
+      </section>
+    </main>
+
+    <footer>
+      <a class="footer-brand" href="#main" aria-label="M squared Sim, back to top">M<sup>2</sup>Sim</a>
+      <p>Coupling individual states with collective dynamics.</p>
+      <nav aria-label="Footer resources"><a href="https://github.com/AI4SS/M2Sim">Code</a><a href="assets/M2Sim.pdf">Paper</a><a href="mailto:skyesong@hust.edu.cn">Contact</a></nav>
+    </footer>
+  </div>
+</body>
+</html>
