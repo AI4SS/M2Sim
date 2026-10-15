@@ -1,4 +1,5 @@
-<h2 align="center"># M^2Sim: Coupling Macro Dynamics and Micro States for Long-Horizon Social Simulation
+<h2 align="center">
+  M<sup>2</sup>Sim: <br>Coupling Macro Dynamics and Micro States for Long-Horizon Social Simulation
 </h2>
 <p align="center">
   <a href="https://ai4ss.github.io/M2Sim/">
